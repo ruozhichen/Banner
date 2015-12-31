@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1451566517 source:d:\ба~\coding\banner1\main.cpp
+	<iostream>
+	<cstdio>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<cv.h>
+	<highgui.h>
+
