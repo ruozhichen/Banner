@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1459338197 source:d:\研~\coding\标准衡量\rgbtogrey\main.cpp
+	<iostream>
+	<cstdio>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<cv.h>
+	<highgui.h>
+
