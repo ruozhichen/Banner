@@ -21,7 +21,7 @@
 #define ALIGNMENT_PERCENTAGE 0.5
 #define BALANCE_PERCENTAGE 0.5
 #define ALIGNMENT_COEFFICIENT 1.0
-#define BALANCE_COEFFICIENT 1.0   //ÔÚcost¼ÆËãÊ±£¬·Å´óµÄ±ÈÀıÏµÊı
+#define BALANCE_COEFFICIENT 1.0   //åœ¨costè®¡ç®—æ—¶ï¼Œæ”¾å¤§çš„æ¯”ä¾‹ç³»æ•°
 #define PLAIN 		1.0
 #define BACKGROUND  0.0
 #define FALSE 	0
@@ -33,29 +33,29 @@
 #define BIG_GROWTH 0.30
 
 /**
-ÄÜ¸ù¾İÒ»¶¨µÄcostÀ´¼ÆËã¹ã¸æµÄÆ½ºâ£¬²¢ÓÉ´Ë²úÉúcost×îĞ¡µÄ¹ã¸æ²¼¾Ö
-costµÄ¼ÆËã¸ù¾İÂÛÎÄ¡¶Gaudi An Automated Graphic Design Expert Syste¡·ÀïÌá¹©µÄ´úÂë
-ËùÓĞÔªËØµÄÕûÌå¡°ÖØĞÄ¡±×ø±ê¼ÆËã¸Ä³É¼ÓÈ¨Æ½¾ù£¬¼´È¨ÖØ*×ø±êµÄÀÛ¼ÓºÍ/È¨ÖØµÄÀÛ¼ÓºÍ£¬Ğ§¹û±ÈÔ­À´ÒªºÃºÜ¶à¡£
+èƒ½æ ¹æ®ä¸€å®šçš„costæ¥è®¡ç®—å¹¿å‘Šçš„å¹³è¡¡ï¼Œå¹¶ç”±æ­¤äº§ç”Ÿcostæœ€å°çš„å¹¿å‘Šå¸ƒå±€
+costçš„è®¡ç®—æ ¹æ®è®ºæ–‡ã€ŠGaudi An Automated Graphic Design Expert Systeã€‹é‡Œæä¾›çš„ä»£ç 
+æ‰€æœ‰å…ƒç´ çš„æ•´ä½“â€œé‡å¿ƒâ€åæ ‡è®¡ç®—æ”¹æˆåŠ æƒå¹³å‡ï¼Œå³æƒé‡*åæ ‡çš„ç´¯åŠ å’Œ/æƒé‡çš„ç´¯åŠ å’Œï¼Œæ•ˆæœæ¯”åŸæ¥è¦å¥½å¾ˆå¤šã€‚
 
-¶ÔspaceÀ©´óµÄ·½Ê½Ò²½øĞĞÁËÒ»Ğ©ĞŞ¸Ä£¬¸ù¾İ¸÷ÔªËØÊúÖ±orË®Æ½³¬³öspaceµÄ¸öÊı£¬À´¶ÔÓ¦µÄÀ©´óspaceµÄ¸ßor¿í
-£¨ËäÈ»Ä¿Ç°»¹Ã»ÓÃµ½spaceµÄÀ©´ó£©
+å¯¹spaceæ‰©å¤§çš„æ–¹å¼ä¹Ÿè¿›è¡Œäº†ä¸€äº›ä¿®æ”¹ï¼Œæ ¹æ®å„å…ƒç´ ç«–ç›´oræ°´å¹³è¶…å‡ºspaceçš„ä¸ªæ•°ï¼Œæ¥å¯¹åº”çš„æ‰©å¤§spaceçš„é«˜orå®½
+ï¼ˆè™½ç„¶ç›®å‰è¿˜æ²¡ç”¨åˆ°spaceçš„æ‰©å¤§ï¼‰
 */
 using namespace std;
 const int maxn=100;
-char inputAddr[50] = "input/"; //ÊäÈëµÄÏà¶ÔµØÖ·
+char inputAddr[50] = "input/"; //è¾“å…¥çš„ç›¸å¯¹åœ°å€
 int BannerHeight=640;
 int BannerWidth=1000;
 float BannerBalanceCost;
 float BannerAlignmentCost;
 struct Element{
-    char name[maxn]; //°üº¬Ïà¶ÔµØÖ·ÁË
+    char name[maxn]; //åŒ…å«ç›¸å¯¹åœ°å€äº†
 	float weight;
 	int x_pos;
 	int y_pos;
 	int width;
 	int height;
-	int normalGroup;  //???µ½µ×ÊÇÉ¶
-	int x_avg;		//ÖĞĞÄ×ø±ê
+	int normalGroup;  //???åˆ°åº•æ˜¯å•¥
+	int x_avg;		//ä¸­å¿ƒåæ ‡
 	int y_avg;
 	int alignment;
 };
@@ -136,19 +136,19 @@ Bitmap *load_bitmap(char *filename) {
 
 /**
 store the image from a bitmap.
-flag=0ÔòÊÇ±£´æÔÚinput/
-flag=1ÔòÊÇ±£´æÔÚoutput/
+flag=0åˆ™æ˜¯ä¿å­˜åœ¨input/
+flag=1åˆ™æ˜¯ä¿å­˜åœ¨output/
 */
 void save_bitmap(Bitmap *bmp, char *filename,int flag) {
 	check_im();
 	char rawname[256];
 	char tmpname[256];
-	char relAddr[50];//ÊäÈëÊä³öµÄÍ¼Æ¬Ïà¶ÔÓÚ´úÂëµÄÎ»ÖÃ£¬ÕâÑù·ÀÖ¹Êä³öÊäÈëºÍ´úÂë¶¼ÔÚÒ»¸öÎÄ¼şÀï£¬very very mess.
-	strcpy(tmpname, filename);  //ÏÈ½«filename¿½±´µ½tmpnameÖĞÈ¥£¬²»ÄÜÓÃfilename½øĞĞĞŞ¸Ä£¬ÒòÎªÊÇÖ¸Õë£¬»á¶ÔfilenameÔì³É¸Ä¶¯
+	char relAddr[50];//è¾“å…¥è¾“å‡ºçš„å›¾ç‰‡ç›¸å¯¹äºä»£ç çš„ä½ç½®ï¼Œè¿™æ ·é˜²æ­¢è¾“å‡ºè¾“å…¥å’Œä»£ç éƒ½åœ¨ä¸€ä¸ªæ–‡ä»¶é‡Œï¼Œvery very mess.
+	strcpy(tmpname, filename);  //å…ˆå°†filenameæ‹·è´åˆ°tmpnameä¸­å»ï¼Œä¸èƒ½ç”¨filenameè¿›è¡Œä¿®æ”¹ï¼Œå› ä¸ºæ˜¯æŒ‡é’ˆï¼Œä¼šå¯¹filenameé€ æˆæ”¹åŠ¨
 	if (flag == 0)
-		strcpy(relAddr, inputAddr); //ÒòÎªÇ°Ò»´Î½á¹ûÒª×÷ÎªºóÒ»´ÎµÄÊäÈësheet£¬ËùÒÔÒ²Òª±£´æÔÚinputÎÄ¼şÀï
+		strcpy(relAddr, inputAddr); //å› ä¸ºå‰ä¸€æ¬¡ç»“æœè¦ä½œä¸ºåä¸€æ¬¡çš„è¾“å…¥sheetï¼Œæ‰€ä»¥ä¹Ÿè¦ä¿å­˜åœ¨inputæ–‡ä»¶é‡Œ
 	else
-		strcpy(relAddr, "output/"); //Êä³öµÄÏà¶ÔÎ»ÖÃ
+		strcpy(relAddr, "output/"); //è¾“å‡ºçš„ç›¸å¯¹ä½ç½®
 	strcat(relAddr, tmpname);
 	strcpy(tmpname, relAddr);
 
@@ -169,10 +169,10 @@ void save_bitmap(Bitmap *bmp, char *filename,int flag) {
 }
 
 /*
-¼ÆËãaµÄweightÖµ
-¹âÀÛ¼ÓÆğÀ´£¬¼¸°Ù*¼¸°ÙµÄ£¬¹âÏñËØ¾ÍÓĞºÃ¼¸Íò£¬Õû¸öÍ¼Æ¬weightÖµÕæµÄºÜ´ó¡£¡£¡£
-1.¶ÔÓ¦ÏñËØµÄ»Ò¶ÈÖµÔÙ³ıÒÔ255´ú±í¸ÃÏñËØµÄÈ¨ÖØ£¬²»¹ı´óµÄ»°Ò²µÃÓĞºÃ¼¸Íò
-2.È¡Æ½¾ù£¬¼´×îºó×ÜºÍ/S£¬·¶Î§ÔÚ0~255
+è®¡ç®—açš„weightå€¼
+å…‰ç´¯åŠ èµ·æ¥ï¼Œå‡ ç™¾*å‡ ç™¾çš„ï¼Œå…‰åƒç´ å°±æœ‰å¥½å‡ ä¸‡ï¼Œæ•´ä¸ªå›¾ç‰‡weightå€¼çœŸçš„å¾ˆå¤§ã€‚ã€‚ã€‚
+1.å¯¹åº”åƒç´ çš„ç°åº¦å€¼å†é™¤ä»¥255ä»£è¡¨è¯¥åƒç´ çš„æƒé‡ï¼Œä¸è¿‡å¤§çš„è¯ä¹Ÿå¾—æœ‰å¥½å‡ ä¸‡
+2.å–å¹³å‡ï¼Œå³æœ€åæ€»å’Œ/Sï¼ŒèŒƒå›´åœ¨0~255
 */
 float calculWeight(Bitmap* a){
     int ah=a->h,aw=a->w;
@@ -180,20 +180,20 @@ float calculWeight(Bitmap* a){
     for(int ay=0;ay<ah;ay++){
         for(int ax=0;ax<aw;ax++){
             int value=(*a)[ay][ax];
-            sum+=(value&255);  //ÏñËØ¶ÔÓ¦µÄ»Ò¶ÈÖµ
+            sum+=(value&255);  //åƒç´ å¯¹åº”çš„ç°åº¦å€¼
         }
     }
-    return sum/(ah*aw)/255.0f+0.1f;
+    return sum/(ah*aw)/255.0f;
 }
 /**
-³õÊ¼»¯º£±¨ÖĞµÄÔªËØ
-´ÓÎÄ±¾ÖĞ¶ÁÈ¡¸÷¸öÔªËØµÄÍ¼Æ¬Ãû³Æ
-ÎÄ±¾¸ñÊ½ÈçÏÂ£º
+åˆå§‹åŒ–æµ·æŠ¥ä¸­çš„å…ƒç´ 
+ä»æ–‡æœ¬ä¸­è¯»å–å„ä¸ªå…ƒç´ çš„å›¾ç‰‡åç§°
+æ–‡æœ¬æ ¼å¼å¦‚ä¸‹ï¼š
 n
 xxx.jpg
 xxx.jpg
 ...
-nÎªÔªËØ¸öÊı
+nä¸ºå…ƒç´ ä¸ªæ•°
 */
 void init(Element*current,char*filename,int sizes){
     char imgName[maxn];
@@ -202,23 +202,23 @@ void init(Element*current,char*filename,int sizes){
     int tmp;
     FILE *f1;
     f1=fopen(filename,"r");
-    fscanf(f1,"%d",&tmp);  //sizesµÄ»°ÆäÊµÔÚmainº¯ÊıÖĞÒÑ¾­¶ÁÈ¡ÓÃÓÚ´´½¨ÔªËØÊı×é£¬ÕâÀï¾Í²»ĞèÒªÁË
+    fscanf(f1,"%d",&tmp);  //sizesçš„è¯å…¶å®åœ¨mainå‡½æ•°ä¸­å·²ç»è¯»å–ç”¨äºåˆ›å»ºå…ƒç´ æ•°ç»„ï¼Œè¿™é‡Œå°±ä¸éœ€è¦äº†
     for(int i=0;i<sizes;i++){
         fscanf(f1,"%s",imgName);
 //printf("%d %s\n",i,imgName);
-        strcpy(tmpstr, inputAddr);  //inputAddr´æ´¢µÄÊÇÏà¶ÔµØÖ·£¬ÎªÈ«¾Ö±äÁ¿£¬¶¨ÒåÔÚ´úÂë×îÇ°ÃæÁË¡£
+        strcpy(tmpstr, inputAddr);  //inputAddrå­˜å‚¨çš„æ˜¯ç›¸å¯¹åœ°å€ï¼Œä¸ºå…¨å±€å˜é‡ï¼Œå®šä¹‰åœ¨ä»£ç æœ€å‰é¢äº†ã€‚
         strcat(tmpstr, imgName);
 
         strcpy(current[i].name,tmpstr);
 
         IplImage* img = cvLoadImage(tmpstr);
         IplImage* greyImg = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
-        cvCvtColor(img,greyImg,CV_BGR2GRAY);//cvCvtColor(src,des,CV_BGR2GRAY)½«²ÊÉ«Í¼Æ¬×ª»»³É»Ò¶ÈÍ¼
+        cvCvtColor(img,greyImg,CV_BGR2GRAY);//cvCvtColor(src,des,CV_BGR2GRAY)å°†å½©è‰²å›¾ç‰‡è½¬æ¢æˆç°åº¦å›¾
 //printf("1\n");
         strcpy(greyImgName,"grey-");
         strcat(greyImgName,imgName);
 //printf("%s\n",greyImgName);
-        strcpy(tmpstr, inputAddr);  //inputAddr´æ´¢µÄÊÇÏà¶ÔµØÖ·£¬ÎªÈ«¾Ö±äÁ¿£¬¶¨ÒåÔÚ´úÂë×îÇ°ÃæÁË¡£
+        strcpy(tmpstr, inputAddr);  //inputAddrå­˜å‚¨çš„æ˜¯ç›¸å¯¹åœ°å€ï¼Œä¸ºå…¨å±€å˜é‡ï¼Œå®šä¹‰åœ¨ä»£ç æœ€å‰é¢äº†ã€‚
         strcat(tmpstr,greyImgName);
         cvSaveImage(tmpstr,greyImg);
 //printf("2\n");
@@ -230,7 +230,7 @@ void init(Element*current,char*filename,int sizes){
         current[i].width=gryImgBit->w;
         current[i].height=gryImgBit->h;
 //printf("%d %d\n",BannerWidth-current[i].width,BannerHeight-current[i].height);
-        ///³õÊ¼×ø±êÏŞ¶¨ÔÚÒ»¿ªÊ¼µÄspaceÇøÓòÄÚ
+        ///åˆå§‹åæ ‡é™å®šåœ¨ä¸€å¼€å§‹çš„spaceåŒºåŸŸå†…
         current[i].x_pos=rand()%(BannerWidth-current[i].width-BannerWidth/4)+BannerWidth/4;
         current[i].y_pos=rand()%(BannerHeight-current[i].height-BannerHeight/4)+BannerHeight/4;
         current[i].x_avg=current[i].x_pos+current[i].width/2;
@@ -244,8 +244,8 @@ printf("weight:%f x:%d y:%d\n",current[i].weight,current[i].x_pos,current[i].y_p
     fclose(f1);
 }
 /**
-ÓÃbitmapµÄ·½Ê½½«Í¼Æ¬bĞ´Èëµ½aÖĞÈ¥
-x¡¢yÎªbÔÚaÖĞµÄÆğÊ¼Î»ÖÃ
+ç”¨bitmapçš„æ–¹å¼å°†å›¾ç‰‡bå†™å…¥åˆ°aä¸­å»
+xã€yä¸ºbåœ¨aä¸­çš„èµ·å§‹ä½ç½®
 */
 void putPicture(Bitmap *&a, Bitmap *b, int x,int y){
     int ah=a->h,aw=a->w;
@@ -265,7 +265,7 @@ int main()
     int sizes;
     FILE *f1;
     f1=fopen(filename,"r");
-    fscanf(f1,"%d",&sizes); //ÔªËØ¸öÊı
+    fscanf(f1,"%d",&sizes); //å…ƒç´ ä¸ªæ•°
     fclose(f1);
 
     Element currentSolution[sizes];
@@ -278,7 +278,7 @@ int main()
 	//char result[MAX];
 
     /**
-    Ò»¿ªÊ¼µÄspace¿í¸ß¸÷È¡Õû¸ö¹ã¸æ²¼¾ÖµÄÒ»°ë£¬Î»ÓÚ¹ã¸æ²¼¾ÖµÄÖĞÑë£¬ÔÚÉú²ú¹ı³ÌÖĞÔòÂıÂıÏòËÄÖÜÀ©´ó
+    ä¸€å¼€å§‹çš„spaceå®½é«˜å„å–æ•´ä¸ªå¹¿å‘Šå¸ƒå±€çš„ä¸€åŠï¼Œä½äºå¹¿å‘Šå¸ƒå±€çš„ä¸­å¤®ï¼Œåœ¨ç”Ÿäº§è¿‡ç¨‹ä¸­åˆ™æ…¢æ…¢å‘å››å‘¨æ‰©å¤§
     */
 	whiteSpace.x=BannerWidth/4; whiteSpace.y=BannerHeight/4;
 	whiteSpace.w=BannerWidth/2; whiteSpace.h=BannerHeight/2;
@@ -292,7 +292,7 @@ int main()
 	designType = PLAIN;
 	orientation[0]=orientation[1]=orientation[2]=orientation[3]=HORIZONTAL;
 
-    srand(time(NULL)); //srandÓÃÒ»´Î¾Í¿ÉÒÔ
+    srand(time(NULL)); //srandç”¨ä¸€æ¬¡å°±å¯ä»¥
 
     init(currentSolution,filename,sizes);
     ///The code above is executed successfully!!!
@@ -305,7 +305,7 @@ printf("the initial cost:%f\n",cost(currentSolution, whiteSpace, interestBox, si
 
 	while(t >= tEnd){
 		if((int)t%75 == 0 && t!=300.0 && designType==PLAIN && keepChecking==TRUE){
-			//¼ì²éÊÇ·ñ´æÔÚÔªËØµÄÒ»²¿·Ö»òÕßÕû¸öÔÚspaceÍâÃæ£¬Èô´æÔÚµÄ»°£¬ÔòµÃÀ©´óspace
+			//æ£€æŸ¥æ˜¯å¦å­˜åœ¨å…ƒç´ çš„ä¸€éƒ¨åˆ†æˆ–è€…æ•´ä¸ªåœ¨spaceå¤–é¢ï¼Œè‹¥å­˜åœ¨çš„è¯ï¼Œåˆ™å¾—æ‰©å¤§space
 //printf("sadasd  ");
 			keepChecking = checkSpace(bestSolution, &whiteSpace, orientation, sizes);
 //printf("%d\n",orientation);
@@ -314,29 +314,29 @@ printf("the initial cost:%f\n",cost(currentSolution, whiteSpace, interestBox, si
 		for(int i = 0; i < l(t); i++){
 			memcpy(&candidateSolution, &currentSolution, sizeof(currentSolution));
 			chooseNeighbour(candidateSolution, whiteSpace, sizes, t);
-			//ÔªËØÒÆ¶¯ºóµÄcost¼õÈ¥Ö®Ç°µÄcost
+			//å…ƒç´ ç§»åŠ¨åçš„costå‡å»ä¹‹å‰çš„cost
 			float currentCost=cost(currentSolution, whiteSpace, interestBox, sizes, designType);
 			float candidateCost=cost(candidateSolution, whiteSpace, interestBox, sizes, designType);
 
-///printf("%d %f %f ",i,candidateCost,currentCost); //ÎªÉ¶afterCost¶¼ÊÇ10000¡£¡£¡£
+///printf("%d %f %f ",i,candidateCost,currentCost); //ä¸ºå•¥afterCostéƒ½æ˜¯10000ã€‚ã€‚ã€‚
 			delta = candidateCost - currentCost;
 			/*
-			exp(-(delta/t))Ëæ×ÅdeltaµÄÔö´ó¶ø¼õĞ¡
-			µ±delta<0£¬calcÊÇ>1µÄ¡£
+			exp(-(delta/t))éšç€deltaçš„å¢å¤§è€Œå‡å°
+			å½“delta<0ï¼Œcalcæ˜¯>1çš„ã€‚
 			*/
 			calc = exp(-(delta)/t);
-			//random = drand48(); //²úÉúÒ»¸ödoubleĞÍµÄËæ»úÊı
+			//random = drand48(); //äº§ç”Ÿä¸€ä¸ªdoubleå‹çš„éšæœºæ•°
 			random=rand()*1.0f/(RAND_MAX); //32767
-			//Èç¹û¸Ä±äºóµÄsolution¸üºÃ£¬Ôò¸²¸ÇÖ®Ç°µÄ
+			//å¦‚æœæ”¹å˜åçš„solutionæ›´å¥½ï¼Œåˆ™è¦†ç›–ä¹‹å‰çš„
 			if(random<calc || delta <0)
 				memcpy(&currentSolution, &candidateSolution, sizeof(currentSolution));
-			//¸üĞÂÄ¿Ç°×îºÃµÄsolution
+			//æ›´æ–°ç›®å‰æœ€å¥½çš„solution
             float bestCost=cost(bestSolution, whiteSpace, interestBox, sizes, designType);
 ///printf("%f\n",bestCost);
 			if(currentCost < bestCost)
 				memcpy(&bestSolution, &currentSolution, sizeof(currentSolution));
 		}
-		//alpha(&t); //Êµ¼Ê¾ÍÊÇt=t-1£¬¸ãÄÇÃ´¸´ÔÓ¸ÉÂï
+		//alpha(&t); //å®é™…å°±æ˜¯t=t-1ï¼Œæé‚£ä¹ˆå¤æ‚å¹²å˜›
 		t--;
 	}
 
@@ -355,7 +355,7 @@ printf("size:%d\n",sizes);
 	printf("height:%d \n", whiteSpace.h - originalWhiteSpace.h); 	/*Height*/
 
     printfCentroid(bestSolution,whiteSpace,sizes);
-    //´´½¨°×É«µÄ±³¾°Í¼
+    //åˆ›å»ºç™½è‰²çš„èƒŒæ™¯å›¾
     CvSize bgSize;
     bgSize.width=BannerWidth;
     bgSize.height=BannerHeight;
@@ -363,7 +363,7 @@ printf("size:%d\n",sizes);
     cvSet(bgImg,CV_RGB(255,255,255),0);
     cvSaveImage("input/background.jpg",bgImg);
 
-    //½«ÔªËØÒ»¸ö¸öĞ´Èëµ½±³¾°Í¼ÀïÃæ
+    //å°†å…ƒç´ ä¸€ä¸ªä¸ªå†™å…¥åˆ°èƒŒæ™¯å›¾é‡Œé¢
     Bitmap *bg=load_bitmap("input/background.jpg");
     for(int i=0;i<sizes;i++){
 printf("%s %d %d\n",bestSolution[i].name,bestSolution[i].x_pos,bestSolution[i].y_pos);
@@ -380,13 +380,13 @@ printf("%s %d %d\n",bestSolution[i].name,bestSolution[i].x_pos,bestSolution[i].y
 }
 
 
-//-----------------------------------ÏÂÃæÔ´×ÔgaudiiµÄ´úÂë-----------------------------------
+//-----------------------------------ä¸‹é¢æºè‡ªgaudiiçš„ä»£ç -----------------------------------
 
 /*
 Cheking function
-¼ì²éÊÇ·ñ´æÔÚÔªËØµÄÒ»²¿·Ö»òÕßÕû¸öÔÚspaceÍâÃæ
-ÊÇµÄ»°·µ»Øtrue£¬·ñÔòfalse
-¸ù¾İ¸÷ÔªËØÊúÖ±orË®Æ½³¬³öspaceµÄ¸öÊı£¬À´¶ÔÓ¦µÄÀ©´óspaceµÄ¸ßor¿í
+æ£€æŸ¥æ˜¯å¦å­˜åœ¨å…ƒç´ çš„ä¸€éƒ¨åˆ†æˆ–è€…æ•´ä¸ªåœ¨spaceå¤–é¢
+æ˜¯çš„è¯è¿”å›trueï¼Œå¦åˆ™false
+æ ¹æ®å„å…ƒç´ ç«–ç›´oræ°´å¹³è¶…å‡ºspaceçš„ä¸ªæ•°ï¼Œæ¥å¯¹åº”çš„æ‰©å¤§spaceçš„é«˜orå®½
 */
 int checkSpace(Element *solution, Space *space, int *orientation, int size){
 	int i=0, isOut[size], nOut=0;
@@ -403,9 +403,9 @@ int checkSpace(Element *solution, Space *space, int *orientation, int size){
 
 //printf("%d\n",nOut);
 	/*
-	ÏÂÃæ¾Í²»¶®ÁË¶î¶î,°´µÀÀí³¬³öspaceµÄÔªËØÔ½¶àÔö³¤Ò²Ó¦¸ÃÔ½´óÑ½£¿£¿£¿
-	Ã÷°×ÁË£¬ÒòÎªÏÂÃæforÑ­»·£¬Ã¿³¬³öÒ»´Î£¬space¾ÍÔö¼ÓÒ»´Î¡£
-	ËùÒÔµ±³¬³öÔªËØ¶àÁËµÄ»°£¬Ã¿´ÎÔö³¤µÄ·ù¶ÈÉèÖÃµÄ¾ÍĞ¡Ò»µã
+	ä¸‹é¢å°±ä¸æ‡‚äº†é¢é¢,æŒ‰é“ç†è¶…å‡ºspaceçš„å…ƒç´ è¶Šå¤šå¢é•¿ä¹Ÿåº”è¯¥è¶Šå¤§å‘€ï¼Ÿï¼Ÿï¼Ÿ
+	æ˜ç™½äº†ï¼Œå› ä¸ºä¸‹é¢forå¾ªç¯ï¼Œæ¯è¶…å‡ºä¸€æ¬¡ï¼Œspaceå°±å¢åŠ ä¸€æ¬¡ã€‚
+	æ‰€ä»¥å½“è¶…å‡ºå…ƒç´ å¤šäº†çš„è¯ï¼Œæ¯æ¬¡å¢é•¿çš„å¹…åº¦è®¾ç½®çš„å°±å°ä¸€ç‚¹
 	*/
 	if(nOut == 1)
 		factor = BIG_GROWTH; //0.3
@@ -427,7 +427,7 @@ int checkSpace(Element *solution, Space *space, int *orientation, int size){
 	}
 	growy += (int)growy%20==0?0: 20-(int)growy%20;
 	growx += (int)growx%20==0?0: 20-(int)growx%20;
-	//ÓÃÓÚÀ©´óspaceµÄÃæ»ı,
+	//ç”¨äºæ‰©å¤§spaceçš„é¢ç§¯,
 	if(space->h+growy<BannerHeight){
             space->h+=(int)growy;
 //printf("%d ",space->y);
@@ -449,10 +449,10 @@ int checkSpace(Element *solution, Space *space, int *orientation, int size){
 		return FALSE;
 }
 /*
-ÅĞ¶ÏgroupÊÇ·ñÍêÈ«°üº¬ÔÚspaceÄÚ
-°üº¬£¬isOut=false
-·ñÔò£¬isOut=true
-Ôö¼ÓÁË²ÎÊıorientation£¬±ê¼Çspace¸ÃÍùÄÄ¸ö·½ÏòÀ©Õ¹
+åˆ¤æ–­groupæ˜¯å¦å®Œå…¨åŒ…å«åœ¨spaceå†…
+åŒ…å«ï¼ŒisOut=false
+å¦åˆ™ï¼ŒisOut=true
+å¢åŠ äº†å‚æ•°orientationï¼Œæ ‡è®°spaceè¯¥å¾€å“ªä¸ªæ–¹å‘æ‰©å±•
 */
 int checkBorders(Element g, Space *space, int size,int &orientation){
 	int i, isOut=FALSE;
@@ -460,12 +460,12 @@ int checkBorders(Element g, Space *space, int size,int &orientation){
 	if(g.x_pos < space->x ||
 		g.x_pos + g.width > space->x + space->w){
 			isOut=TRUE;
-			orientation=HORIZONTAL;//ÓÃÒÔ±ê¼ÇË®Æ½·½Ïò³¬³öÁËspaceµÄ¿Õ¼ä£¬spaceĞèÒªË®Æ½·½ÏòµÄÀ©Õ¹
+			orientation=HORIZONTAL;//ç”¨ä»¥æ ‡è®°æ°´å¹³æ–¹å‘è¶…å‡ºäº†spaceçš„ç©ºé—´ï¼Œspaceéœ€è¦æ°´å¹³æ–¹å‘çš„æ‰©å±•
 	}
 	if(g.y_pos < space->y ||
 		g.y_pos + g.height > space->y + space->h ){
 			isOut=TRUE;
-			orientation=VERTICAL;//ÓÃÒÔ±ê¼Ç´¹Ö±·½Ïò³¬³öÁËspaceµÄ¿Õ¼ä£¬spaceĞèÒª´¹Ö±·½ÏòµÄÀ©Õ¹
+			orientation=VERTICAL;//ç”¨ä»¥æ ‡è®°å‚ç›´æ–¹å‘è¶…å‡ºäº†spaceçš„ç©ºé—´ï¼Œspaceéœ€è¦å‚ç›´æ–¹å‘çš„æ‰©å±•
 	}
 	return isOut;
 }
@@ -480,7 +480,7 @@ float cost(Element *candidate, Space space, Space interestBox, int size, int des
 
 	/*If it's overlapping*/
 	if(overlapCost == 1){
-		return VBN; //10000   ´æÔÚÖØºÏ£¬ÔòcostÎªºÜ´óµÄÖµ¡£
+		return VBN; //10000   å­˜åœ¨é‡åˆï¼Œåˆ™costä¸ºå¾ˆå¤§çš„å€¼ã€‚
 	}
 	/*If not...*/
 	else{
@@ -496,16 +496,16 @@ float cost(Element *candidate, Space space, Space interestBox, int size, int des
 /*
 Alignment cost
 what is interestBox???
-ÊÇº£±¨ÖĞ×îÊÜ¹Ø×¢µÄ²¿·ÖÃ´£¿
+æ˜¯æµ·æŠ¥ä¸­æœ€å—å…³æ³¨çš„éƒ¨åˆ†ä¹ˆï¼Ÿ
 */
 float getAlignmentCost(Element *candidate, Space space, Space interestBox, int size, int designType){
 	int xAligns[size], yAligns[size], x2Aligns[size], y2Aligns[size];
 	int i, j;
-	float totalCost=0.0f, individualCost, normCost; //totalCostÔ´´úÂëÖĞ¶¼Ã»ÓĞ³õÊ¼»¯¡£¡£¡£
+	float totalCost=0.0f, individualCost, normCost; //totalCostæºä»£ç ä¸­éƒ½æ²¡æœ‰åˆå§‹åŒ–ã€‚ã€‚ã€‚
 	int xCheck, x2Check, yCheck, y2Check, marginLeft, marginRight, marginBottom, marginTop;
 	int interestPointLeft, interestPointRight, interestPointUp, interestPointDown;
 
-	//ÒÔ¸÷¸öÔªËØµÄËÄÌõ±ßËùÔÚµÄÏß×÷Îª¶ÔÆëÏß
+	//ä»¥å„ä¸ªå…ƒç´ çš„å››æ¡è¾¹æ‰€åœ¨çš„çº¿ä½œä¸ºå¯¹é½çº¿
 	for(i=0;i<size;i++){
 		xAligns[i]= candidate[i].x_pos;
 		yAligns[i]= candidate[i].y_pos;
@@ -523,7 +523,7 @@ float getAlignmentCost(Element *candidate, Space space, Space interestBox, int s
 				/*X2 Y2 check*/
 				if(x2Aligns[i]==x2Aligns[j]){
 					x2Check=1;
-					candidate[i].alignment= 0;	//Ó¦¸ÃÊÇRIGHT£¬¼´ÓÒ¶ÔÆë
+					candidate[i].alignment= 0;	//åº”è¯¥æ˜¯RIGHTï¼Œå³å³å¯¹é½
 				}
 				else if(y2Aligns[i]==y2Aligns[j])
 					y2Check=1;
@@ -605,20 +605,20 @@ float getBalanceCost(Element *candidate, Space space, int size){
 	float weights=0, xWeights=0, yWeights=0, maxDistance, distance;
 	for(i=0;i<size;i++){
 		weights+=candidate[i].weight;
-		xWeights+= candidate[i].weight*candidate[i].x_avg;  //what is x_avg and y_avg? And why do they calculate as this£¿£¿£¿
+		xWeights+= candidate[i].weight*candidate[i].x_avg;  //what is x_avg and y_avg? And why do they calculate as thisï¼Ÿï¼Ÿï¼Ÿ
 		yWeights+= candidate[i].weight*candidate[i].y_avg;
 	}
 
 	centroidX = (int) (xWeights/weights);
 	centroidY = (int) (yWeights/weights);
-    ///Ëã³öÀ´µÄ»ù±¾ÉÏ¡°ÖØĞÄ×ø±ê¡±µÄÖµ¶¼ÔÚ¸öÎ»Êı¡£¡£¡£
+    ///ç®—å‡ºæ¥çš„åŸºæœ¬ä¸Šâ€œé‡å¿ƒåæ ‡â€çš„å€¼éƒ½åœ¨ä¸ªä½æ•°ã€‚ã€‚ã€‚
 //printf("%f %f %f %d %d\n",weights,xWeights,yWeights,centroidX,centroidY);
 //printf("%d %d\n",centroidX,centroidY);
 	centerX = space.w/2;
 	centerY = space.h/2;
 
 	distance = sqrt(pow(centroidX-centerX, 2) + pow(centroidY-centerY, 2));
-    ///ÎÒ¾õµÃÓ¦¸ÃÊÇ¶Ô½ÇÏßµÄÒ»°ë£¬ÒòÎªÈÎÒ»µãµ½ÖĞĞÄµÄ×î´ó¾àÀë¾ÍÊÇ¶Ô½ÇÏßµÄÒ»°ë
+    ///æˆ‘è§‰å¾—åº”è¯¥æ˜¯å¯¹è§’çº¿çš„ä¸€åŠï¼Œå› ä¸ºä»»ä¸€ç‚¹åˆ°ä¸­å¿ƒçš„æœ€å¤§è·ç¦»å°±æ˜¯å¯¹è§’çº¿çš„ä¸€åŠ
 	maxDistance = sqrt(pow(centerX, 2) + pow(centerY, 2));
 //printf("%f %f\n",distance,maxDistance);
 	return distance/maxDistance;
@@ -633,29 +633,29 @@ void printfCentroid(Element *candidate, Space space, int size){
 	float weights=0, xWeights=0, yWeights=0, maxDistance, distance;
 	for(i=0;i<size;i++){
 		weights+=candidate[i].weight;
-		xWeights+= candidate[i].weight+candidate[i].x_avg;  //what is x_avg and y_avg? And why do they calculate as this£¿£¿£¿
+		xWeights+= candidate[i].weight+candidate[i].x_avg;  //what is x_avg and y_avg? And why do they calculate as thisï¼Ÿï¼Ÿï¼Ÿ
 		yWeights+= candidate[i].weight+candidate[i].y_avg;
 	}
 
 	centroidX = (int) (xWeights/weights);
 	centroidY = (int) (yWeights/weights);
-    ///Ëã³öÀ´µÄ»ù±¾ÉÏ¡°ÖØĞÄ×ø±ê¡±µÄÖµ¶¼ÔÚ¸öÎ»Êı¡£¡£¡£
+    ///ç®—å‡ºæ¥çš„åŸºæœ¬ä¸Šâ€œé‡å¿ƒåæ ‡â€çš„å€¼éƒ½åœ¨ä¸ªä½æ•°ã€‚ã€‚ã€‚
 //printf("%f %f %f %d %d\n",weights,xWeights,yWeights,centroidX,centroidY);
 printf("%f %f %f\n",weights,xWeights,yWeights);
-printf("ÖØĞÄ×ø±ê£º%d %d\n",centroidX,centroidY);
+printf("é‡å¿ƒåæ ‡ï¼š%d %d\n",centroidX,centroidY);
 	centerX = space.w/2;
 	centerY = space.h/2;
 
 	distance = sqrt(pow(centroidX-centerX, 2) + pow(centroidY-centerY, 2));
-    ///ÎÒ¾õµÃÓ¦¸ÃÊÇ¶Ô½ÇÏßµÄÒ»°ë£¬ÒòÎªÈÎÒ»µãµ½ÖĞĞÄµÄ×î´ó¾àÀë¾ÍÊÇ¶Ô½ÇÏßµÄÒ»°ë
+    ///æˆ‘è§‰å¾—åº”è¯¥æ˜¯å¯¹è§’çº¿çš„ä¸€åŠï¼Œå› ä¸ºä»»ä¸€ç‚¹åˆ°ä¸­å¿ƒçš„æœ€å¤§è·ç¦»å°±æ˜¯å¯¹è§’çº¿çš„ä¸€åŠ
 	maxDistance = sqrt(pow(centerX, 2) + pow(centerY, 2));
 //printf("%f %f\n",distance,maxDistance);
 	//printf("%f %f %f\n",distance,maxDistance,distance/maxDistance);
 }
 /*
 Overlap cost
-ÅĞ¶ÏÊÇ·ñ´æÔÚÁ½¸öÎïÌåÓĞÖØºÏ£¬
-ÊÇµÄ»°·µ»Ø1£¬·ñÔò0.
+åˆ¤æ–­æ˜¯å¦å­˜åœ¨ä¸¤ä¸ªç‰©ä½“æœ‰é‡åˆï¼Œ
+æ˜¯çš„è¯è¿”å›1ï¼Œå¦åˆ™0.
 */
 int getOverlapCost(Element *candidate, int size){
 	int i, j;
@@ -671,7 +671,7 @@ int getOverlapCost(Element *candidate, int size){
 }
 
 /*
-ÅĞ¶ÏÁ½ÎïÌåÊÇ·ñÖØºÏ
+åˆ¤æ–­ä¸¤ç‰©ä½“æ˜¯å¦é‡åˆ
 */
 int isOverlapping(Element one, Element two){
 	int xCheck, xCheck1, xCheck2, xCheck3, xCheck4;
@@ -702,7 +702,7 @@ int isOverlapping(Element one, Element two){
 
 /*
 Neighbour fuction
-¶ÔÔªËØ½øĞĞËæ»úµÄÒÆ¶¯
+å¯¹å…ƒç´ è¿›è¡Œéšæœºçš„ç§»åŠ¨
 */
 void chooseNeighbour(Element *candidate, Space space, int size, float t){
 	int i, widthSteps, heightSteps, xJump, yJump;
@@ -736,7 +736,7 @@ int yrand =rand();
 
 			/*
 			We run some checks on the calculations
-			ÏÂÃæ6ĞĞ±£Ö¤ÔªËØÔÚspaceÀïÃæ£¬ÕâÀïÓĞ¸öÇ°Ìá£¬¾ÍÊÇÔªËØµÄ¿í¶È¡¢¸ß¶È¿Ï¶¨ÊÇĞ¡ÓÚspaceµÄ
+			ä¸‹é¢6è¡Œä¿è¯å…ƒç´ åœ¨spaceé‡Œé¢ï¼Œè¿™é‡Œæœ‰ä¸ªå‰æï¼Œå°±æ˜¯å…ƒç´ çš„å®½åº¦ã€é«˜åº¦è‚¯å®šæ˜¯å°äºspaceçš„
 			*/
 			x_pos2 = candidate[i].x_pos + candidate[i].width;
 			y_pos2 = candidate[i].y_pos + candidate[i].height;
@@ -747,8 +747,8 @@ int yrand =rand();
 			candidate[i].x_pos = x_pos2 > space.x + space.w?(space.x+space.w)-candidate[i].width:candidate[i].x_pos;
 			candidate[i].y_pos = y_pos2 > space.y + space.h?(space.y+space.h)-candidate[i].height:candidate[i].y_pos;
 
-			//±£Ö¤×ø±êÖµÊÇ20µÄ±¶Êı¡£
-			//ÄÇÕâÑùÈç¹ûÖ®Ç°Éè¶¨Îªspace.x£¬ÔÙ¼õ²»¾ÍÔÚspaceÍâÁËÃ´£¿ÄÇÖ»ÓĞ¿ÉÄÜspace.xÊÇ20µÄ±¶Êı£¬ËùÒÔ¼´Ê¹¼õÒ²ÊÇ0
+			//ä¿è¯åæ ‡å€¼æ˜¯20çš„å€æ•°ã€‚
+			//é‚£è¿™æ ·å¦‚æœä¹‹å‰è®¾å®šä¸ºspace.xï¼Œå†å‡ä¸å°±åœ¨spaceå¤–äº†ä¹ˆï¼Ÿé‚£åªæœ‰å¯èƒ½space.xæ˜¯20çš„å€æ•°ï¼Œæ‰€ä»¥å³ä½¿å‡ä¹Ÿæ˜¯0
 			candidate[i].x_pos -= candidate[i].x_pos%20!=0?candidate[i].x_pos%20:0;
 			candidate[i].y_pos -= candidate[i].y_pos%20!=0?candidate[i].y_pos%20:0;
 
