@@ -1,0 +1,3 @@
+cost:	0.355298
+BalanceCost:	0.016845
+AlignmentCost:	0.693750
