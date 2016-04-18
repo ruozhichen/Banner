@@ -54,6 +54,8 @@ struct Element{
 	int normalGroup;  //???到底是啥
 	int x_avg;		//中心坐标
 	int y_avg;
+	int x_gravity;
+	int y_gravity;
 	int alignment;
 };
 
@@ -265,16 +267,16 @@ void init(Element*current,char*filename,int sizes){
         ///初始坐标限定在一开始的space区域内
         current[i].x_pos=rand()%(BannerWidth-current[i].width-BannerWidth/4)+BannerWidth/4;
         current[i].y_pos=rand()%(BannerHeight-current[i].height-BannerHeight/4)+BannerHeight/4;
-        int x_gravity,y_gravity;
-        calGravityOfElement(gryImgBit,x_gravity,y_gravity,GRIDX,GRIDY); //分成GRIDX*GRIDY个网格
+        //int x_gravity,y_gravity;
+        calGravityOfElement(gryImgBit,current[i].x_gravity,current[i].y_gravity,GRIDX,GRIDY); //分成GRIDX*GRIDY个网格
         //current[i].x_avg=current[i].x_pos+current[i].width/2;
         //current[i].y_avg=current[i].y_pos+current[i].height/2;
-        current[i].x_avg=current[i].x_pos+x_gravity;
-        current[i].y_avg=current[i].y_pos+y_gravity;
+        current[i].x_avg=current[i].x_pos+current[i].x_gravity;
+        current[i].y_avg=current[i].y_pos+current[i].y_gravity;
         current[i].alignment=LEFT;
         current[i].weight=calculWeight(gryImgBit);
         current[i].normalGroup=1;
-printf("gravity in element: %d %d\nweight:%f x:%d y:%d\n\n",x_gravity,y_gravity,current[i].weight,current[i].x_pos,current[i].y_pos);
+printf("gravity in element: %d %d\nweight:%f x:%d y:%d\n\n",current[i].x_gravity,current[i].y_gravity,current[i].weight,current[i].x_pos,current[i].y_pos);
 //printf("4\n");
     }
     fclose(f1);
@@ -316,8 +318,8 @@ int main()
     /**
     一开始的space宽高各取整个广告布局的一半，位于广告布局的中央，在生产过程中则慢慢向四周扩大
     */
-	whiteSpace.x=BannerWidth/4; whiteSpace.y=BannerHeight/4;
-	whiteSpace.w=BannerWidth/2; whiteSpace.h=BannerHeight/2;
+	//whiteSpace.x=BannerWidth/4; whiteSpace.y=BannerHeight/4;
+	//whiteSpace.w=BannerWidth/2; whiteSpace.h=BannerHeight/2;
 
     whiteSpace.x=0; whiteSpace.y=0;
 	whiteSpace.w=BannerWidth; whiteSpace.h=BannerHeight;
@@ -789,8 +791,11 @@ int yrand =rand();
 			candidate[i].y_pos -= candidate[i].y_pos%20!=0?candidate[i].y_pos%20:0;
 
 			/*We too calculate the average point*/
-			candidate[i].x_avg = candidate[i].x_pos + candidate[i].width/2;
-			candidate[i].y_avg = candidate[i].y_pos + candidate[i].height/2;
+			///!!!3.0计算元素重心的时候忘记更改这里了啊啊啊
+			//candidate[i].x_avg = candidate[i].x_pos + candidate[i].width/2;
+			//candidate[i].y_avg = candidate[i].y_pos + candidate[i].height/2;
+			candidate[i].x_avg = candidate[i].x_pos + candidate[i].x_gravity;
+			candidate[i].y_avg = candidate[i].y_pos + candidate[i].y_gravity;
 
 		}
 	}
