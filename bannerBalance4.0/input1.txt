@@ -1,0 +1,5 @@
+630 420
+3
+title.jpg   1
+imageA.jpg  0
+explain.jpg 2

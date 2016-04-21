@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1461065350 source:d:\研~\coding\标准衡量\bannerbalance4.0\main.cpp
+	<iostream>
+	<cstdio>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<cv.h>
+	<highgui.h>
+	<ctime>
+	<stdlib.h>
+	<string.h>
+
