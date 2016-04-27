@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1461742174 source:d:\研~\coding\标准衡量\bannergui2.0\resource.rc
+	<windows.h>
+	<commctrl.h>
+	<richedit.h>
+	"resource.h"
+
+1461742174 d:\研~\coding\标准衡量\bannergui2.0\resource.h
+
+1461742807 source:d:\研~\coding\标准衡量\bannergui2.0\main.cpp
+	<windows.h>
+	<commctrl.h>
+	<stdio.h>
+	"resource.h"
+	<iostream>
+	<commdlg.h>
+	<direct.h>
+	<iostream>
+	<cstdio>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<cv.h>
+	<highgui.h>
+	<ctime>
+	<stdlib.h>
+	<string.h>
+
