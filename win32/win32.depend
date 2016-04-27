@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1461679372 source:d:\研~\coding\标准衡量\win32\resource.rc
+	<windows.h>
+	<commctrl.h>
+	<richedit.h>
+	"resource.h"
+
+1461679372 d:\研~\coding\标准衡量\win32\resource.h
+
+1461726219 source:d:\研~\coding\标准衡量\win32\main.cpp
+	<windows.h>
+	<commctrl.h>
+	<stdio.h>
+	"resource.h"
+	<iostream>
+	<commdlg.h>
+	<direct.h>
+	<iostream>
+	<cstdio>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<cv.h>
+	<highgui.h>
+	<ctime>
+	<stdlib.h>
+	<string.h>
+
