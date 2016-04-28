@@ -10,4 +10,4 @@ BannerGUI2.0:
 Banner3.0:
 改善了界面布局排版
 在release版本下运行时，会不时跳出命令行窗口，原因是load_bitmap()和save_bitmap()里面调用system()执行cmd命令
-后改用CreateProcess()代替，但是save_bitmap()最后一个system()代替不了，如果代替，则最后生产的是一张灰色的图额。。。
+后改用CreateProcess()代替
