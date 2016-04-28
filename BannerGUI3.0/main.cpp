@@ -213,7 +213,7 @@ BOOL CALLBACK DlgMain(HWND hwndDlg,/*窗口句柄，32位无符号整数*/
                 {
                 // Do something usefull with the filename stored in szFileName
                     SetWindowText(buttonImage,TEXT("Has chosen"));
-                    ///cout<<szFileNameImage<<endl;  //在控制台中显示选中文件的路径
+                    cout<<szFileNameImage<<endl;  //在控制台中显示选中文件的路径
                 }
                 fileChosen[0]=true;
                 break;
@@ -225,7 +225,7 @@ BOOL CALLBACK DlgMain(HWND hwndDlg,/*窗口句柄，32位无符号整数*/
                 {
                 // Do something usefull with the filename stored in szFileName
                     SetWindowText(buttonTitle,TEXT("Has chosen"));
-                    ///cout<<szFileNameTitle<<endl;  //在控制台中显示选中文件的路径
+                    cout<<szFileNameTitle<<endl;  //在控制台中显示选中文件的路径
                 }
                 fileChosen[1]=true;
                 break;
@@ -237,7 +237,7 @@ BOOL CALLBACK DlgMain(HWND hwndDlg,/*窗口句柄，32位无符号整数*/
                 {
                 // Do something usefull with the filename stored in szFileName
                     SetWindowText(buttonExplain,TEXT("Has chosen"));
-                    ///cout<<szFileNameExplain<<endl;  //在控制台中显示选中文件的路径
+                    cout<<szFileNameExplain<<endl;  //在控制台中显示选中文件的路径
                 }
                 fileChosen[2]=true;
                 break;
@@ -647,21 +647,50 @@ int isOverlapping(Element one, Element two);
 char * itoa (int i);
 void printfCentroid(Element *candidate, Space space, int size);
 
+char*getCmdline(char*command){
+    char cmdline[MAX_PATH];
+    char systemAddr[MAX_PATH];
+    GetSystemDirectory(systemAddr, MAX_PATH);
+
+    strcpy(cmdline,systemAddr);
+	strcat(cmdline,"\\cmd.exe /c ");
+    strcat(cmdline,command);
+    return cmdline;
+}
 void check_im() {
+    char cmdline[MAX_PATH];
+    char systemAddr[MAX_PATH];
+    GetSystemDirectory(systemAddr, MAX_PATH);
+
     STARTUPINFO si;
     PROCESS_INFORMATION pi;  //用于创建进程
 
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
-    //下面两个是用于隐藏调用进程执行命令时产生的控制台窗口的，或者直接函数里面第六个参数设为CREATE_NO_WINDOW
-    //si.dwFlags=STARTF_USESHOWWINDOW;  //没有这一句的话，下面wShowWindow的参数将无效
-    //si.wShowWindow=SW_HIDE;
     ZeroMemory( &pi, sizeof(pi) );
 
-	if (CreateProcess(NULL,"identify > null.txt",NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) {
+    strcpy(cmdline,systemAddr);
+	strcat(cmdline,"\\cmd.exe /c ");
+    strcat(cmdline,"identify > null.txt");
+
+    if (CreateProcess(NULL,cmdline,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) {
 		fprintf(stderr, "ImageMagick must be installed, and 'convert' and 'identify' must be in the path\n"); exit(1);
 	}
 
+	//if (system("identify > null.txt") != 0) {
+	//	fprintf(stderr, "ImageMagick must be installed, and 'convert' and 'identify' must be in the path\n"); exit(1);
+	//}
+	if (pi.hProcess)
+    {
+            // 是cmd的句柄
+        WaitForSingleObject(pi.hProcess, INFINITE);
+    }
+
+    if (pi.hProcess)
+        CloseHandle(pi.hProcess);
+
+    if (pi.hThread)
+        CloseHandle(pi.hThread);
 }
 
 
@@ -669,72 +698,80 @@ void check_im() {
 Bitmap *load_bitmap(char *filename) {
 	check_im();
 	char rawname[256], txtname[256];
-
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;  //用于创建进程
-
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    //下面两个是用于隐藏调用进程执行命令时产生的控制台窗口的，或者直接函数里面第六个参数设为CREATE_NO_WINDOW
-    //si.dwFlags=STARTF_USESHOWWINDOW;  //没有这一句的话，下面wShowWindow的参数将无效
-    //si.wShowWindow=SW_HIDE;
-    ZeroMemory( &pi, sizeof(pi) );
+    char buf[256];
 	//char relAddr[50] = "input/";
 	//strcat(relAddr, filename);
 	//strcpy(filename, relAddr);
 
 	strcpy(rawname, filename);
 	strcpy(txtname, filename);
-
-	if (!strstr(rawname, ".")) {
-        fprintf(stderr, "Error reading image '%s': no extension found\n", filename);
-        exit(1);
-    }
-
+	if (!strstr(rawname, ".")) { fprintf(stderr, "Error reading image '%s': no extension found\n", filename); exit(1); }
 	sprintf(strstr(rawname, "."), ".raw");  //strstr(str1,str2):look for str2 in str1 and return the first location, or return null.
 	sprintf(strstr(txtname, "."), ".txt");
 
-	char buf[256];
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;  //用于创建进程
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
 	sprintf(buf, "convert %s rgba:%s", filename, rawname);
 
-	if (CreateProcess(NULL,buf,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) {
-        //如果返回值为0，则失败；非0，则成功
-        fprintf(stderr, "Error reading image '%s': ImageMagick convert gave an error\n", filename);
-        system("pause");
-        exit(1);
-    }
+	char cmdline[MAX_PATH];
+    char systemAddr[MAX_PATH];
+    GetSystemDirectory(systemAddr, MAX_PATH);
+
+    strcpy(cmdline,systemAddr);
+	strcat(cmdline,"\\cmd.exe /c ");
+    strcat(cmdline,buf);
+
+printf("cmdline: %s \n",getCmdline(buf));
+    if (CreateProcess(NULL,cmdline,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) { fprintf(stderr, "Error reading image '%s': ImageMagick convert gave an error\n", filename); system("pause"); exit(1); }
+	//if (system(cmdline) != 0) { fprintf(stderr, "Error reading image '%s': ImageMagick convert gave an error\n", filename); system("pause"); exit(1); }
+
 	sprintf(buf, "identify -format \"%%w %%h\" %s > %s", filename, txtname);
-	if (CreateProcess(NULL,buf,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) {
-        fprintf(stderr, "Error reading image '%s': ImageMagick identify gave an error\n", filename);
-        system("pause");
-        exit(1);
+
+    strcpy(cmdline,systemAddr);
+	strcat(cmdline,"\\cmd.exe /c ");
+    strcat(cmdline,buf);
+
+	if (CreateProcess(NULL,cmdline,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) { fprintf(stderr, "Error reading image '%s': ImageMagick identify gave an error\n", filename); system("pause"); exit(1); }
+
+    if (pi.hProcess)
+    {
+            // 是cmd的句柄
+        WaitForSingleObject(pi.hProcess, INFINITE);
     }
+
+    if (pi.hProcess)
+        CloseHandle(pi.hProcess);
+
+    if (pi.hThread)
+        CloseHandle(pi.hThread);
 
 	FILE *f = fopen(txtname, "rt");
-	if (!f) {
-        fprintf(stderr, "Error reading image '%s': could not read output of ImageMagick identify\n", filename);
-        system("pause");
-        exit(1);
-    }
-
+//printf("txtname: %s\n\n",txtname);
+//char tmpaddr[MAX_PATH];
+//getcwd(tmpaddr, MAX_PATH); //获取当前窗口的路径保存下来
+//printf("current directory: %s\n\n",tmpaddr);
+	if (!f) { fprintf(stderr, "Error reading image '%s': could not read output of ImageMagick identify\n", filename); system("pause"); exit(1); }
 	int w = 0, h = 0;  //"a.txt" "b.txt" stores values of w,h of pixels
-	if (fscanf(f, "%d %d", &w, &h) != 2) {
-        fprintf(stderr, "Error reading image '%s': could not get size from ImageMagick identify\n", filename);
-        system("pause");
-        exit(1);
-    }
+	if (fscanf(f, "%d %d", &w, &h) != 2) { fprintf(stderr, "Error reading image '%s': could not get size from ImageMagick identify\n", filename); system("pause"); exit(1); }
 	fclose(f);
+//printf("w  h  %d %d\n",w,h);
+//printf("rawname: %s\n",rawname);
+//getcwd(systemAddr, MAX_PATH);
+//printf("system addr: %s\n\n",systemAddr);
 	f = fopen(rawname, "rb");
+//printf("rawname: %s\n\n",rawname);
 	Bitmap *ans = new Bitmap(w, h);
 	unsigned char *p = (unsigned char *)ans->data;
 	//Read data about the picture, but why *4???
 	for (int i = 0; i < w*h * 4; i++) {
 		int ch = fgetc(f);
-		if (ch == EOF) {
-            fprintf(stderr, "Error reading image '%s': raw file is smaller than expected size %dx%dx4\n", filename, w, h, 4);
-            system("pause");
-            exit(1);
-        }
+		if (ch == EOF) { fprintf(stderr, "Error reading image '%s': raw file is smaller than expected size %dx%dx4\n", filename, w, h, 4); system("pause"); exit(1); }
 		*p++ = ch;
 	}
 	fclose(f);
@@ -751,17 +788,6 @@ void save_bitmap(Bitmap *bmp, char *filename,int flag) {
 	char rawname[256];
 	char tmpname[256];
 	char relAddr[50];//输入输出的图片相对于代码的位置，这样防止输出输入和代码都在一个文件里，very very mess.
-
-	STARTUPINFO si;
-    PROCESS_INFORMATION pi;  //用于创建进程
-
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    //下面两个是用于隐藏调用进程执行命令时产生的控制台窗口的，或者直接函数里面第六个参数设为CREATE_NO_WINDOW
-    si.dwFlags=STARTF_USESHOWWINDOW;  //没有这一句的话，下面wShowWindow的参数将无效
-    si.wShowWindow=SW_HIDE;
-    ZeroMemory( &pi, sizeof(pi) );
-
 	strcpy(tmpname, filename);  //先将filename拷贝到tmpname中去，不能用filename进行修改，因为是指针，会对filename造成改动
 	if (flag == InputAddr)
 		strcpy(relAddr, inputAddr); //因为前一次结果要作为后一次的输入sheet，所以也要保存在input文件里
@@ -782,11 +808,36 @@ void save_bitmap(Bitmap *bmp, char *filename,int flag) {
 		fputc(*p++, f);
 	}
 	fclose(f);
+
+	STARTUPINFO si;
+    PROCESS_INFORMATION pi;  //用于创建进程
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
 	sprintf(buf, "convert -size %dx%d -depth 8 rgba:%s %s", bmp->w, bmp->h, rawname, tmpname);
-    //sprintf(buf, "convert -size %dx%d rgba:%s %s", bmp->w, bmp->h, rawname, tmpname);
-    ///但是这里如果用CreateProcess(NULL,buf,NULL,NULL,FALSE,0,NULL,NULL,&si,&pi)==0的话，最后的结果是灰色的。。。
-    //if (CreateProcess(NULL,buf,NULL,NULL,FALSE,0,NULL,NULL,&si,&pi)==0) { fprintf(stderr, "Error writing image '%s': ImageMagick convert gave an error\n", tmpname); system("pause"); exit(1); }
-	if (system(buf) != 0) { fprintf(stderr, "Error writing image '%s': ImageMagick convert gave an error\n", tmpname); system("pause"); exit(1); }
+
+    char cmdline[MAX_PATH];
+    char systemAddr[MAX_PATH];
+    GetSystemDirectory(systemAddr, MAX_PATH);
+
+    strcpy(cmdline,systemAddr);
+	strcat(cmdline,"\\cmd.exe /c ");
+    strcat(cmdline,buf);
+
+	if (CreateProcess(NULL,cmdline,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,NULL,&si,&pi)==0) { fprintf(stderr, "Error writing image '%s': ImageMagick convert gave an error\n", tmpname); system("pause"); exit(1); }
+    if (pi.hProcess)
+    {
+            // 是cmd的句柄
+        WaitForSingleObject(pi.hProcess, INFINITE);
+    }
+
+    if (pi.hProcess)
+        CloseHandle(pi.hProcess);
+
+    if (pi.hThread)
+        CloseHandle(pi.hThread);
 }
 
 /*
@@ -875,7 +926,7 @@ void zoomImage(char*imageName,char*zoomImageName,float scale){
 	cvResize(pSrcImage, pDstImage, CV_INTER_AREA);
 
 	//保存图片，函数返回后参数zoomImageName也会被修改
-	strcpy(zoomImageName,"zoom-");
+	strcpy(zoomImageName,"zoom_");
     strcat(zoomImageName,imageName);
     strcpy(tmpstr, inputAddr);  //inputAddr存储的是相对地址，为全局变量，定义在代码最前面了。
     strcat(tmpstr,zoomImageName);
@@ -947,7 +998,7 @@ void init(Element*current,Name*elementName,int *kindMark,int sizes,Space titleSp
         IplImage* greyImg = cvCreateImage(cvGetSize(zoomImg), IPL_DEPTH_8U, 1);
         cvCvtColor(zoomImg,greyImg,CV_BGR2GRAY);//cvCvtColor(src,des,CV_BGR2GRAY)将彩色图片转换成灰度图
 
-        strcpy(greyImgName,"grey-");
+        strcpy(greyImgName,"grey_");
         strcat(greyImgName,current[i].zoomName);
         strcpy(tmpstr, inputAddr);  //inputAddr存储的是相对地址，为全局变量，定义在代码最前面了。
         strcat(tmpstr,greyImgName);
@@ -955,9 +1006,9 @@ void init(Element*current,Name*elementName,int *kindMark,int sizes,Space titleSp
 
         strcpy(tmpstr, inputAddr);
         strcat(tmpstr, greyImgName);
-
+printf("gryimg location:%s\n",tmpstr);
         Bitmap *gryImgBit = load_bitmap(tmpstr); ///因为load_bitmap函数，导致程序运行，结果展示之前，会闪过好几次控制台窗口
-
+///return;///sdaadssssssssssssssssssssssssss
         current[i].width=gryImgBit->w;
         current[i].height=gryImgBit->h;
 
@@ -1115,13 +1166,14 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
     else{
         init(currentSolution,elementName,kindMark,sizes,titleSpace,user_defined_layout);  //自定义布局2
     }
+///return; ///asdaaaaaaaaaaaaaaaaasdas
 
     ///The code above is executed successfully!!!
 	originalWhiteSpace = whiteSpace;
 
 	/*****Simulated Annealing*****/
 	memcpy(&bestSolution, &currentSolution, sizeof(currentSolution));
-//printf("the initial cost:%f\n",cost(currentSolution, whiteSpace, interestBox, sizes, designType));
+printf("the initial cost:%f\n",cost(currentSolution, whiteSpace, interestBox, sizes, designType));
 
 	while(t >= tEnd){
 		if((int)t%75 == 0 && t!=300.0 && designType==PLAIN && keepChecking==TRUE){
@@ -1146,7 +1198,7 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
 			float currentCost=cost(currentSolution, whiteSpace, interestBox, sizes, designType);
 			float candidateCost=cost(candidateSolution, whiteSpace, interestBox, sizes, designType);
 
-///printf("%d %f %f ",i,candidateCost,currentCost); //为啥afterCost都是10000。。。
+//printf("%d %f %f ",i,candidateCost,currentCost); //为啥afterCost都是10000。。。
 			delta = candidateCost - currentCost;
 			/*
 			exp(-(delta/t))随着delta的增大而减小
@@ -1160,7 +1212,7 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
 				memcpy(&currentSolution, &candidateSolution, sizeof(currentSolution));
 			//更新目前最好的solution
             float bestCost=cost(bestSolution, whiteSpace, interestBox, sizes, designType);
-///printf("%f\n",bestCost);
+//printf("%f\n",bestCost);
 			if(currentCost < bestCost)
 				memcpy(&bestSolution, &currentSolution, sizeof(currentSolution));
 		}
@@ -1173,15 +1225,15 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
 //printf("size:%d\n",sizes);
 	for(int i=0;i<sizes;i++){
 		if(bestSolution[i].normalGroup == 1){
-			//printf("%d %d %d %d\n", bestSolution[i].x_pos,bestSolution[i].y_pos,bestSolution[i].x_avg,bestSolution[i].y_avg);
+            printf("%d %d %d %d\n", bestSolution[i].x_pos,bestSolution[i].y_pos,bestSolution[i].x_avg,bestSolution[i].y_avg);
 		}
 	}
 
 	/*Cost*/
-///printf("cost:\t%f\nBalanceCost:\t%f\nAlignmentCost:\t%f\n",cost(bestSolution, whiteSpace, interestBox, sizes, designType),BannerBalanceCost,BannerAlignmentCost);
+printf("cost:\t%f\nBalanceCost:\t%f\nAlignmentCost:\t%f\n",cost(bestSolution, whiteSpace, interestBox, sizes, designType),BannerBalanceCost,BannerAlignmentCost);
 	/*Size modifications*/
-///printf("size modifications--width:%d ", whiteSpace.w - originalWhiteSpace.w); 	/*Width*/
-///printf("height:%d \n", whiteSpace.h - originalWhiteSpace.h); 	/*Height*/
+printf("size modifications--width:%d ", whiteSpace.w - originalWhiteSpace.w); 	/*Width*/
+printf("height:%d \n", whiteSpace.h - originalWhiteSpace.h); 	/*Height*/
 
     printfCentroid(bestSolution,whiteSpace,sizes);
     //创建白色的背景图
@@ -1195,9 +1247,10 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
     //将元素一个个写入到背景图里面
     Bitmap *bg=load_bitmap("input/background.jpg");
     for(int i=0;i<sizes;i++){
-//printf("%s %d %d\n",bestSolution[i].zoomName,bestSolution[i].x_pos,bestSolution[i].y_pos);
+printf("%s %d %d\n",bestSolution[i].zoomName,bestSolution[i].x_pos,bestSolution[i].y_pos);
         strcpy(tmpstr, inputAddr);  //inputAddr存储的是相对地址，为全局变量，定义在代码最前面了。
         strcat(tmpstr, bestSolution[i].zoomName);
+printf("file address : %s\n",tmpstr);
         Bitmap *b = load_bitmap(tmpstr);
         putPicture(bg,b,bestSolution[i].x_pos,bestSolution[i].y_pos);
     }
@@ -1206,8 +1259,8 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
     balanceCost=BannerBalanceCost;
     alignCost=BannerAlignmentCost;
     char resultName[maxn]="result.jpg";
-    char horizontalName[maxn]="horizontal-";
-    char verticalName[maxn]="vertical-";
+    char horizontalName[maxn]="horizontal_";
+    char verticalName[maxn]="vertical_";
     char tmpName[maxn];
 
     if(layoutStyle==HORIZONTAL){
@@ -1233,7 +1286,7 @@ void autocreatBanner(Name*elementName,int *kindMark,float &balanceCost,float &al
         fclose(f2);
     }
     else{
-        strcpy(tmpName,"user_defined-");
+        strcpy(tmpName,"user_defined_");
         strcat(tmpName,resultName);
         strcpy(resultName,tmpName);
         save_bitmap(bg,tmpName,OutputAddr);
