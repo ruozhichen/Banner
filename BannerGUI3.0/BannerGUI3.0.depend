@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1461767181 source:d:\研~\coding\标准衡量\bannergui3.0\main.cpp
+1461824769 source:d:\研~\coding\标准衡量\bannergui3.0\main.cpp
 	<windows.h>
 	<commctrl.h>
 	<stdio.h>
@@ -18,9 +18,9 @@
 	<stdlib.h>
 	<string.h>
 
-1461767565 d:\研~\coding\标准衡量\bannergui3.0\resource.h
+1461824556 d:\研~\coding\标准衡量\bannergui3.0\resource.h
 
-1461767565 source:d:\研~\coding\标准衡量\bannergui3.0\resource.rc
+1461824556 source:d:\研~\coding\标准衡量\bannergui3.0\resource.rc
 	<windows.h>
 	<commctrl.h>
 	<richedit.h>
